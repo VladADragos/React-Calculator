@@ -20,27 +20,33 @@ class App extends Component {
       input === "-" ||
       input === "."
     ) {
+      console.log("Is Valid")
       return true;
-    } else return false;
+    } else {
+      console.log("Is Not Valid")
+      return false;
+    }
   };
 
   addToInput = e => {
     let value = e.target.value;
     if (this.isValidInput(value)) {
-      if (this.state.input.length > 4 && this.state.input !== "syntax error") {
-        this.setState({ input: "To long calculation" });
-        setTimeout(this.clear, 2000);
-      } else {
+      if (value === "=") {
+        this.setState({ input: eval(this.state.input) });
+      }else {
         this.setState({ input: this.state.input + value });
-        e.target.blur();
+        if(e !== undefined){
+          e.target.blur();
+        }
       }
-    } else if (value === "=") {
-      this.setState({ input: eval(this.state.input) });
-    }
+    }  
   };
-  clear = () => {
+  clear = (e) => {
     this.setState({ input: "" });
-    console.log(this.isValidInput());
+    
+    if(e !== undefined){
+      e.target.blur();
+    }
   };
   enter = e => {
     try {
@@ -49,13 +55,20 @@ class App extends Component {
       this.setState({ input: "syntax error" });
       setTimeout(this.clear, 2000);
     }
-  };
-  change = e => {
-    //let input = e.target.keyCode;
-    console.log(e);
-    if (this.isValidInput(e.target.value)) {
-      this.setState({ input: e.target.value });
+    if(e !== undefined){
+      e.target.blur();
     }
+    
+  };
+  change = event => {
+    //let input = e.target.keyCode;
+    console.log(event.target.value);
+    
+      
+      this.setState({ input: event.target.value });
+    
+      //this.setState({ input: e.target.value });
+    
   };
   gobal = e => {
     if (e.keyCode === 13) {
@@ -63,13 +76,18 @@ class App extends Component {
       this.addToInput(e);
     }
   };
-
+  handleKeyboardEnter=(event)=>{
+    
+    if(event.key==="Enter"){
+      this.enter(event);
+    } 
+  }
   render() {
-    //window.addEventListener("keydown", this.gobal, false);
+
     return (
       <div className="calculator-container">
         <div className="calculator">
-          <Input input={this.state.input} onChange={this.change} />
+          <Input input={this.state.input} onChange={this.change} handleKeyboardEnter={this.handleKeyboardEnter}/>
           <Buttons handleClick={this.addToInput} handleEnter={this.enter} />
           <Clear handleClick={this.clear} />
         </div>

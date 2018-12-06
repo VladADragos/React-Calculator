@@ -8,6 +8,7 @@ export class Input extends Component {
         type="text"
         value={this.props.input}
         onChange={this.props.onChange}
+        onKeyPress={this.props.handleKeyboardEnter}
       />
     );
   }
